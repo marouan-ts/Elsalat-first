@@ -262,7 +262,7 @@ var times;
 let getResponsive = (country = "Saudi Arabia", city = "Makkah") => {
   axios
     .get(
-      `http://api.aladhan.com/v1/calendarByCity?city=${city}&country=${country}&method=2&month=${datee[1]}&year=${datee[2]}`
+      `https://api.aladhan.com/v1/calendarByCity?city=${city}&country=${country}&method=2&month=${datee[1]}&year=${datee[2]}`
     )
     .then((response) => {
       resp = response.data.data;
