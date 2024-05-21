@@ -14,10 +14,7 @@
 
 <body>
     <div class="container">
-        <div class="date-time">
-            <div id="date"></div>
-            <div id="time"></div>
-        </div>
+        
         <header>
             <h1 class="title">الصلاة أولاً</h1>
             <nav>
@@ -27,7 +24,21 @@
                     <option value="Morocco">المغرب</option>
                     <option value="Egypt">مصر</option>
                     <option value="Turkey">تركيا</option>
+                    <option value="United Arab Emirates">الإمارات</option>
+                    <option value="Malaysia">ماليزيا</option>
+                    <option value="Pakistan">باكستان</option>
+                    <option value="Indonesia">إندونيسيا</option>
+                    <option value="United States">الولايات المتحدة</option>
+                    <option value="United Kingdom">المملكة المتحدة</option>
+                    <option value="Russia">روسيا</option>
+                    <option value="China">الصين</option>
+                    <option value="Japan">اليابان</option>
+                    <option value="Germany">ألمانيا</option>
+                    <option value="France">فرنسا</option>
+                    <option value="Italy">إيطاليا</option>
+                    <option value="Spain">إسبانيا</option>
                 </select>
+                
                 <select id="select-city" onchange="updateCity()">
                     <option selected value="City">المدينة</option>
                 </select>
@@ -35,6 +46,14 @@
             </nav>
         </header>
         <main>
+            <div class="date-time">
+                <i onclick="setDays(this.id)" id="r" class="fa-solid fa-chevron-right"></i>
+                <div style="display: flex; align-items: center;">
+                    <i style="color: #7f9782;" class="fa-solid fa-calendar-days"></i>
+                    <div style="color: #fff;" id="date"></div>
+                </div>
+                <i onclick="setDays(this.id)" id="l" class="fa-solid fa-chevron-left"></i>
+            </div>
             <div class="boxs">
                 <div class="box">
                     <h2>الصّبح</h2>
@@ -65,111 +84,23 @@
                 <p id="hadith"></p>
                 <div class="icon">
                     <i id="right" onclick="updateHadith(this.id)" class="fa-solid fa-arrow-right"></i>
-                    <i onclick="copyTextFromElement('hadith')" class="fa-solid fa-copy"></i>
+                    <i id="copy" onclick="copyTextFromElement('hadith',this.id)" class="fa-solid fa-copy"></i>
+                    <i id="mize" onclick="mizeScreen(this.id)" class="fa-solid fa-maximize"></i>
                     <i id="left" onclick="updateHadith(this.id)" class="fa-solid fa-arrow-left"></i>
                 </div>
             </div>
+        <div class="foot">
+            <h3 style="height:30px; font-size: 16px; font-weight: 400;" class="foot">
+                copyright
+                <i class="fa-regular fa-copyright"></i>
+                <span>MAROUANE</span>
+            </h3>
+        </div>
         </main>
     </div>
 
     <script src="main.js"></script>
     <script src="copyelement.js"></script>
-    <!-- <script>
-        let now = new Date();
-        let localDateString = now.toLocaleDateString('en-GB'); // Format to DD/MM/YYYY
-        let localTimeString = now.toLocaleTimeString();
-        console.log(localDateString);
-        let timee = localTimeString.split(':');
-        let datee = localDateString.split('/');
-        console.log(timee);
-        const date = document.getElementById("date");
-        const time = document.getElementById("time");
-        let allTimes = [];
-        date.innerHTML = localDateString;
-
-        let clock = () => {
-            let hour = parseInt(timee[0]);
-            let minute = parseInt(timee[1]);
-            let second = parseInt(timee[2].split(' ')[0]);
-            let apm = timee[2].split(' ')[1];
-
-            setInterval(() => {
-                second++;
-                if (second === 60) {
-                    second = 0;
-                    minute++;
-                }
-                if (minute === 60) {
-                    minute = 0;
-                    hour++;
-                }
-                if (hour === 12 && apm === 'AM') {
-                    apm = 'PM';
-                } else if (hour === 12 && apm === 'PM') {
-                    apm = 'AM';
-                }
-                if (hour > 12) {
-                    hour -= 12;
-                }
-
-                let formattedHour = hour < 10 ? `0${hour}` : hour;
-                let formattedMinute = minute < 10 ? `0${minute}` : minute;
-
-                time.innerHTML = `${formattedHour}:${formattedMinute} ${apm}`;
-            }, 1000);
-        };
-        clock();
-
-        let setCountryAndCity = () => {
-            let countryAndCity = document.getElementById('select-country').value.split(',');
-            setCountry(countryAndCity[0], countryAndCity[1]);
-        };
-
-        let setCountry = (country, defaultCity) => {
-            let citySelect = document.getElementById('select-city');
-            citySelect.innerHTML = `<option selected value="${defaultCity}">${defaultCity}</option>`;
-
-            if (country === 'Morocco') {
-                citySelect.innerHTML += '<option value="Casablanca">الداربيضاء</option>';
-                citySelect.innerHTML += '<option value="Rabat">الرباط</option>';
-                citySelect.innerHTML += '<option value="Agadir">أكادير</option>';
-            }
-            getResponsive(country, defaultCity);
-        };
-
-        let updateCity = () => {
-            let country = document.getElementById('select-country').value.split(',')[0];
-            let city = document.getElementById('select-city').value;
-            getResponsive(country, city);
-        };
-
-        let getResponsive = (country = 'Saudi Arabia', city = 'Makkah') => {
-            axios.get(`http://api.aladhan.com/v1/calendarByCity?city=${city}&country=${country}&method=2&month=${datee[1]}&year=${datee[2]}`)
-                .then((response) => {
-                    console.log(response.data.data[0].timings);
-                    let times = response.data.data[0].timings;
-
-                    allTimes = [
-                        times.Fajr.split(' ')[0],
-                        times.Sunrise.split(' ')[0],
-                        times.Dhuhr.split(' ')[0],
-                        times.Asr.split(' ')[0],
-                        times.Maghrib.split(' ')[0],
-                        times.Isha.split(' ')[0]
-                    ];
-
-                    for (let i = 1; i <= 6; i++) {
-                        document.getElementById(`box${i}`).innerHTML = allTimes[i - 1];
-                    }
-                })
-                .catch(function (error) {
-                    console.error(error);
-                });
-        };
-
-        // Initial call to load data for the default country and city
-        setCountryAndCity();
-    </script> -->
 </body>
 
 </html>
